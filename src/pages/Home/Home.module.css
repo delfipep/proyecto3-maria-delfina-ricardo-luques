@@ -1,0 +1,12 @@
+.battleContainer {
+    display: flex;
+}
+.centerContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+.centerContainer p {
+    font-size: 60px;
+    margin: 100px;
+}

@@ -1,0 +1,11 @@
+.pokeImg {
+    width: 150px;
+    margin: 30px;
+}
+
+.selectContainer {
+    display: flex;
+    flex-direction: column;
+    width: 150px;
+    margin: auto;
+}
