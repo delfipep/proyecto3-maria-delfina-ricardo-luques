@@ -29,6 +29,7 @@ const Card = (props) => {
     // Actualiza el ataque utilizando la función de actualización
     if (selectedPokemonData) {
       props.updateName(selectedPokemonData.name.english)
+      props.updateImg(selectedPokemonData.image.hires)
       props.updateAttack(selectedPokemonData.base.Attack);
       props.updateLife(selectedPokemonData.base.HP);
     } else {
@@ -55,9 +56,7 @@ const Card = (props) => {
           className={style.pokeImg}
           src={
             selectedPokemon
-            ? filteredPokemons.find(
-              (pokemon) => pokemon.id === parseInt(selectedPokemon)
-              ).image.hires
+            ? props.img
               : pokeball
           }
           alt="Pokemon"

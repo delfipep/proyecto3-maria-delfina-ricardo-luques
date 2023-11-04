@@ -1,12 +1,31 @@
 .battleContainer {
-    display: flex;
+  display: flex;
 }
 .centerContainer {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
 }
 .centerContainer p {
-    font-size: 60px;
-    margin: 100px;
+  font-size: 60px;
+  margin: 100px;
+}
+
+.dialog {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+
+  background-image: radial-gradient( #000000ad 0%, #000000dc 100%);
+}
+.winnerInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.winnerImg {
+  width: 300px;
+  height: 300px;
+  margin: 30px 40px 0 40px;
 }

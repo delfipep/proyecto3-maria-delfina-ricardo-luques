@@ -13,7 +13,10 @@ import style from "./Home.module.css";
 const Home = () => {
   const [pokemon1Name, setPokemon1Name] = useState("");
   const [pokemon2Name, setPokemon2Name] = useState("");
-  
+
+  const [pokemon1Img, setPokemon1Img] = useState(null);
+  const [pokemon2Img, setPokemon2Img] = useState(null);
+
   const [pokemon1Life, setPokemon1Life] = useState(0);
   const [pokemon2Life, setPokemon2Life] = useState(0);
 
@@ -21,10 +24,14 @@ const Home = () => {
   const [pokemon2Attack, setPokemon2Attack] = useState(0);
 
   const [isCombatting, setIsCombatting] = useState(false);
-  const [winner, setWinner] = useState(null);
+  const [winnerName, setWinnerName] = useState(null);
+  const [winnerImg, setWinnerImg] = useState(null);
 
   const updatePokemon1Name = (name) => {
     setPokemon1Name(name);
+  };
+  const updatePokemon1Img = (img) => {
+    setPokemon1Img(img);
   };
   const updatePokemon1Life = (life) => {
     setPokemon1Life(life);
@@ -35,6 +42,9 @@ const Home = () => {
 
   const updatePokemon2Name = (name) => {
     setPokemon2Name(name);
+  };
+  const updatePokemon2Img = (img) => {
+    setPokemon2Img(img);
   };
   const updatePokemon2Life = (life) => {
     setPokemon2Life(life);
@@ -58,16 +68,20 @@ const Home = () => {
       setPokemon1Life(pokemon1Life - damage2);
       setPokemon2Life(pokemon2Life - damage1);
 
-      let winnerName = "";
+      let winnerPokeName = "";
+      let winnerPokeImg = null;
       if (pokemon1Life > pokemon2Life) {
-        winnerName = pokemon1Name;
+        winnerPokeName = pokemon1Name;
+        winnerPokeImg = pokemon1Img;
       } else if (pokemon2Life > pokemon1Life) {
-        winnerName = pokemon2Name;
+        winnerPokeName = pokemon2Name;
+        winnerPokeImg = pokemon2Img;
       } else {
-        winnerName = "Empate";
+        winnerPokeName = "Empate";
       }
 
-      setWinner(winnerName);
+      setWinnerName(winnerPokeName);
+      setWinnerImg(winnerPokeImg);
     }, 1000);
 
     setIsCombatting(false);
@@ -84,10 +98,10 @@ const Home = () => {
   };
 
   useEffect(() => {
-    if (winner) {
+    if (winnerName) {
       handleClickOpen();
     }
-  }, [winner]);
+  }, [winnerName]);
 
   return (
     <div>
@@ -97,6 +111,8 @@ const Home = () => {
         <Card
           name={pokemon1Name}
           updateName={updatePokemon1Name}
+          img={pokemon1Img}
+          updateImg={updatePokemon1Img}
           life={pokemon1Life}
           updateLife={updatePokemon1Life}
           attack={pokemon1Attack}
@@ -111,8 +127,10 @@ const Home = () => {
           )}
         </div>
         <Card
-            name={pokemon2Name}
-            updateName={updatePokemon2Name}
+          name={pokemon2Name}
+          updateName={updatePokemon2Name}
+          img={pokemon2Img}
+          updateImg={updatePokemon2Img}
           life={pokemon2Life}
           updateLife={updatePokemon2Life}
           attack={pokemon2Attack}
@@ -124,16 +142,26 @@ const Home = () => {
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
+        className={style.dialog}
       >
         <DialogTitle id="alert-dialog-title">Resultado del Combate</DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            {winner === "Empate" ? "Es un empate." : `El ganador es ${winner}.`}
+          <DialogContentText
+            id="alert-dialog-description"
+            className={style.winnerInfo}
+          >
+            {winnerName === "Empate"
+              ? "Es un empate."
+              : `El ganador es ${winnerName}.`}
+            <img className={style.winnerImg} src={winnerImg} alt="" />
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">
             Cerrar
+          </Button>
+          <Button onClick={handleClose} color="primary">
+            Guardar
           </Button>
         </DialogActions>
       </Dialog>
