@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import pokemonData from "../../pokemon_data.json";
 import pokeball from "../../assets/pokeball.svg";
 
-import style from "./Card.module.css"
+import style from "./Card.module.css";
 
-const Card = () => {
+const Card = (props) => {
   const [selectedType, setSelectedType] = useState("");
   const [selectedPokemon, setSelectedPokemon] = useState("");
 
@@ -15,13 +15,29 @@ const Card = () => {
   const handleTypeChange = (event) => {
     const type = event.target.value;
     setSelectedType(type);
-    setSelectedPokemon(""); // Reinicia el Pokémon seleccionado cuando cambia el tipo
+    setSelectedPokemon("");
   };
 
   const handlePokemonChange = (event) => {
     const pokemonId = event.target.value;
-    setSelectedPokemon(pokemonId);
+    const selectedPokemonData = filteredPokemons.find(
+      (pokemon) => pokemon.id === parseInt(pokemonId)
+    );
+  
+    setSelectedPokemon(selectedPokemonData ? selectedPokemonData.id : null);
+  
+    // Actualiza el ataque utilizando la función de actualización
+    if (selectedPokemonData) {
+      props.updateName(selectedPokemonData.name.english)
+      props.updateAttack(selectedPokemonData.base.Attack);
+      props.updateLife(selectedPokemonData.base.HP);
+    } else {
+
+      props.updateAttack(0); // Establece el ataque en 0 si no se selecciona ningún Pokémon
+      props.updateLife(0); // Establece la vida en 0 si no se selecciona ningún Pokémon
+    }
   };
+  
 
   const filteredPokemons = selectedType
     ? pokemonData.pokemons.filter((pokemon) =>
@@ -31,17 +47,61 @@ const Card = () => {
 
   return (
     <div>
-      <h3>Selecciona un Pokémon</h3>
+      <h3>{selectedPokemon ? props.name : "Selecciona un Pokémon"}</h3>
+      {console.log(props.name)}
 
-      <img
-        className={style.pokeImg}
-        src={
-          selectedPokemon
-            ? filteredPokemons.find((pokemon) => pokemon.id === parseInt(selectedPokemon)).image.hires
-            : pokeball
-        }
-        alt="Pokemon"
-      />
+      <div className={style.imgContainer}>
+        <img
+          className={style.pokeImg}
+          src={
+            selectedPokemon
+            ? filteredPokemons.find(
+              (pokemon) => pokemon.id === parseInt(selectedPokemon)
+              ).image.hires
+              : pokeball
+          }
+          alt="Pokemon"
+          />
+
+        <div className={style.pokeInfo}>
+          <div className={style.pokeStats}>
+            <div>
+              <h3>
+                {selectedPokemon
+                  ? props.attack
+                  : "-"}
+              </h3>
+              <p>Atk</p>
+            </div>
+
+            <div>
+              <h3>
+                {selectedPokemon
+                  ? filteredPokemons.find(
+                      (pokemon) => pokemon.id === parseInt(selectedPokemon)
+                    ).base.Defense
+                  : "-"}
+              </h3>
+              <p>Def</p>
+            </div>
+
+            <div>
+              <h3>
+                {selectedPokemon
+                  ? filteredPokemons.find(
+                      (pokemon) => pokemon.id === parseInt(selectedPokemon)
+                    ).base.Speed
+                  : "-"}
+              </h3>
+              <p>Spd</p>
+            </div>
+          </div>
+
+          <div className={style.lifeContainer}>
+            HP: {props.life}
+          </div>
+        </div>
+      </div>
 
       <div className={style.selectContainer}>
         <select
