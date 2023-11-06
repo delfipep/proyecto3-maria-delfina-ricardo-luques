@@ -23,22 +23,21 @@ const Card = (props) => {
     const selectedPokemonData = filteredPokemons.find(
       (pokemon) => pokemon.id === parseInt(pokemonId)
     );
-  
+
     setSelectedPokemon(selectedPokemonData ? selectedPokemonData.id : null);
-  
+
     // Actualiza el ataque utilizando la función de actualización
     if (selectedPokemonData) {
-      props.updateName(selectedPokemonData.name.english)
-      props.updateImg(selectedPokemonData.image.hires)
-      props.updateAttack(selectedPokemonData.base.Attack);
-      props.updateLife(selectedPokemonData.base.HP);
+      props.updatePokemon(
+        selectedPokemonData.name.english,
+        selectedPokemonData.image.hires,
+        selectedPokemonData.base.HP,
+        selectedPokemonData.base.Attack
+      );
     } else {
-
-      props.updateAttack(0); // Establece el ataque en 0 si no se selecciona ningún Pokémon
-      props.updateLife(0); // Establece la vida en 0 si no se selecciona ningún Pokémon
+      props.updatePokemon("", null, 0, 0); // Establece el ataque y la vida en 0 si no se selecciona ningún Pokémon
     }
   };
-  
 
   const filteredPokemons = selectedType
     ? pokemonData.pokemons.filter((pokemon) =>
@@ -48,28 +47,19 @@ const Card = (props) => {
 
   return (
     <div>
-      <h3>{selectedPokemon ? props.name : "Selecciona un Pokémon"}</h3>
-      {console.log(props.name)}
+      <h3>{selectedPokemon ? props.pokemon.name : "Selecciona un Pokémon"}</h3>
 
       <div className={style.imgContainer}>
         <img
           className={style.pokeImg}
-          src={
-            selectedPokemon
-            ? props.img
-              : pokeball
-          }
+          src={selectedPokemon ? props.pokemon.img : pokeball}
           alt="Pokemon"
-          />
+        />
 
         <div className={style.pokeInfo}>
           <div className={style.pokeStats}>
             <div>
-              <h3>
-                {selectedPokemon
-                  ? props.attack
-                  : "-"}
-              </h3>
+              <h3>{selectedPokemon ? props.pokemon.attack : "-"}</h3>
               <p>Atk</p>
             </div>
 
@@ -96,9 +86,7 @@ const Card = (props) => {
             </div>
           </div>
 
-          <div className={style.lifeContainer}>
-            HP: {props.life}
-          </div>
+          <div className={style.lifeContainer}>HP: {props.pokemon.life}</div>
         </div>
       </div>
 

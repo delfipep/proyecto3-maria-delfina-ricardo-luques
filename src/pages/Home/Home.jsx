@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Card from "../../components/Card/Card";
 import Header from "../../components/Header/Header";
+
 import CircularProgress from "@mui/material/CircularProgress";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -12,50 +13,29 @@ import DialogTitle from "@mui/material/DialogTitle";
 import style from "./Home.module.css";
 
 const Home = () => {
-  const [pokemon1Name, setPokemon1Name] = useState("");
-  const [pokemon2Name, setPokemon2Name] = useState("");
+  const initialPokemonState = {
+    name: "",
+    img: null,
+    life: 0,
+    attack: 0,
+  };
 
-  const [pokemon1Img, setPokemon1Img] = useState(null);
-  const [pokemon2Img, setPokemon2Img] = useState(null);
-
-  const [pokemon1Life, setPokemon1Life] = useState(0);
-  const [pokemon2Life, setPokemon2Life] = useState(0);
-
-  const [pokemon1Attack, setPokemon1Attack] = useState(0);
-  const [pokemon2Attack, setPokemon2Attack] = useState(0);
+  const [pokemon1, setPokemon1] = useState({ ...initialPokemonState });
+  const [pokemon2, setPokemon2] = useState({ ...initialPokemonState });
 
   const [isCombatting, setIsCombatting] = useState(false);
   const [winnerName, setWinnerName] = useState(null);
   const [winnerImg, setWinnerImg] = useState(null);
 
-  const updatePokemon1Name = (name) => {
-    setPokemon1Name(name);
-  };
-  const updatePokemon1Img = (img) => {
-    setPokemon1Img(img);
-  };
-  const updatePokemon1Life = (life) => {
-    setPokemon1Life(life);
-  };
-  const updatePokemon1Attack = (attack) => {
-    setPokemon1Attack(attack);
-  };
-
-  const updatePokemon2Name = (name) => {
-    setPokemon2Name(name);
-  };
-  const updatePokemon2Img = (img) => {
-    setPokemon2Img(img);
-  };
-  const updatePokemon2Life = (life) => {
-    setPokemon2Life(life);
-  };
-  const updatePokemon2Attack = (attack) => {
-    setPokemon2Attack(attack);
+  const updatePokemon = (pokemon, name, img, life, attack) => {
+    pokemon.name = name;
+    pokemon.img = img;
+    pokemon.life = life;
+    pokemon.attack = attack;
   };
 
   const handleStartBattle = () => {
-    if (!pokemon1Attack || !pokemon2Attack) {
+    if (!pokemon1.attack || !pokemon2.attack) {
       alert("Selecciona un Pokémon para ambos lados antes de combatir.");
       return;
     }
@@ -63,29 +43,41 @@ const Home = () => {
     setIsCombatting(true);
 
     setTimeout(() => {
-      const damage1 = Math.floor(Math.random() * 20) + pokemon1Attack;
-      const damage2 = Math.floor(Math.random() * 20) + pokemon2Attack;
+      const damage1 = Math.floor(Math.random() * 20) + pokemon1.attack;
+      const damage2 = Math.floor(Math.random() * 20) + pokemon2.attack;
 
-      setPokemon1Life(pokemon1Life - damage2);
-      setPokemon2Life(pokemon2Life - damage1);
+      updatePokemon(
+        pokemon1,
+        pokemon1.name,
+        pokemon1.img,
+        pokemon1.life - damage2,
+        pokemon1.attack
+      );
+      updatePokemon(
+        pokemon2,
+        pokemon2.name,
+        pokemon2.img,
+        pokemon2.life - damage1,
+        pokemon2.attack
+      );
 
-      let winnerPokeName = "";
-      let winnerPokeImg = null;
-      if (pokemon1Life > pokemon2Life) {
-        winnerPokeName = pokemon1Name;
-        winnerPokeImg = pokemon1Img;
-      } else if (pokemon2Life > pokemon1Life) {
-        winnerPokeName = pokemon2Name;
-        winnerPokeImg = pokemon2Img;
+      let winnerName = "";
+      let winnerImg = null;
+
+      if (pokemon1.life > pokemon2.life) {
+        winnerName = pokemon1.name;
+        winnerImg = pokemon1.img;
+      } else if (pokemon2.life > pokemon1.life) {
+        winnerName = pokemon2.name;
+        winnerImg = pokemon2.img;
       } else {
-        winnerPokeName = "Empate";
+        winnerName = "Empate";
       }
 
-      setWinnerName(winnerPokeName);
-      setWinnerImg(winnerPokeImg);
+      setWinnerName(winnerName);
+      setWinnerImg(winnerImg);
+      setIsCombatting(false);
     }, 1000);
-
-    setIsCombatting(false);
   };
 
   const [open, setOpen] = React.useState(false);
@@ -106,35 +98,27 @@ const Home = () => {
 
   return (
     <div>
-      <Header/>
-        <div className={style.battleContainer}>
+      <Header />
+      <div className={style.battleContainer}>
         <Card
-          name={pokemon1Name}
-          updateName={updatePokemon1Name}
-          img={pokemon1Img}
-          updateImg={updatePokemon1Img}
-          life={pokemon1Life}
-          updateLife={updatePokemon1Life}
-          attack={pokemon1Attack}
-          updateAttack={updatePokemon1Attack}
+          pokemon={pokemon1}
+          updatePokemon={(name, img, life, attack) =>
+            updatePokemon(pokemon1, name, img, life, attack)
+          }
         />
         <div className={style.centerContainer}>
           <p>VS</p>
           {isCombatting ? (
-            <CircularProgress />
+            <CircularProgress className={style.circularProgress} />
           ) : (
             <Button onClick={handleStartBattle}>Comenzar</Button>
           )}
         </div>
         <Card
-          name={pokemon2Name}
-          updateName={updatePokemon2Name}
-          img={pokemon2Img}
-          updateImg={updatePokemon2Img}
-          life={pokemon2Life}
-          updateLife={updatePokemon2Life}
-          attack={pokemon2Attack}
-          updateAttack={updatePokemon2Attack}
+          pokemon={pokemon2}
+          updatePokemon={(name, img, life, attack) =>
+            updatePokemon(pokemon2, name, img, life, attack)
+          }
         />
       </div>
       <Dialog
@@ -150,9 +134,11 @@ const Home = () => {
             id="alert-dialog-description"
             className={style.winnerInfo}
           >
-            {winnerName === "Empate"
-              ? "Es un empate."
-              : `El ganador es ${winnerName}.`}
+            {winnerName === "Empate" ? (
+              <p>Es un empate.</p>
+            ) : (
+              <p>El ganador es {winnerName}</p>
+            )}
             <img className={style.winnerImg} src={winnerImg} alt="" />
           </DialogContentText>
         </DialogContent>
