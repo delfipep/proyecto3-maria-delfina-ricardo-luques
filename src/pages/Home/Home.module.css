@@ -1,7 +1,10 @@
 .battleContainer {
   display: flex;
+  margin: auto;
+  width: 55vw;
 }
 .centerContainer {
+    margin: auto;
   display: flex;
   flex-direction: column;
   justify-content: space-around;

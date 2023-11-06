@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Card from "../../components/Card/Card";
+import Header from "../../components/Header/Header";
 import CircularProgress from "@mui/material/CircularProgress";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -105,9 +106,8 @@ const Home = () => {
 
   return (
     <div>
-      <h1>Duelo Pokemon</h1>
-
-      <div className={style.battleContainer}>
+      <Header/>
+        <div className={style.battleContainer}>
         <Card
           name={pokemon1Name}
           updateName={updatePokemon1Name}
