@@ -12,6 +12,9 @@
   flex-direction: column;
   justify-content: space-around;
 }
+p {
+  color: #fff;
+}
 .centerContainer p {
   font-size: 60px;
   margin: 100px;
@@ -27,6 +30,11 @@
 }
 .dialog div {
   background-color: #1a1a1a;
+  color: #fff;
+}
+.dialog p {
+  color: #ff2727;
+  font-size: 24px;
 }
 .winnerInfo {
   display: flex;
