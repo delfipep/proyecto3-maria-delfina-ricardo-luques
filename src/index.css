@@ -13,10 +13,7 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 }
-body {
-  background-color: #242424;
-  color: #fff;
-}
+
 * {
   color: #fff;
 }
@@ -38,11 +35,21 @@ a {
 }
 
 body {
-  margin: 0;
+  margin: auto;
+
   display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   place-items: center;
+
   min-width: 320px;
   min-height: 100vh;
+
+  height: 100%;
+
+  background-color: #242424;
+  color: #fff;
 }
 
 h1 {

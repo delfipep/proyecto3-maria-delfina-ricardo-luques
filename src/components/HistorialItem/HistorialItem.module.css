@@ -1,0 +1,58 @@
+.battleInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  height: 180px;
+
+  border: solid 1px #fff;
+  border-radius: 10px;
+
+  box-shadow: 0 0 50px #111;
+
+  padding: 0 15px 10px;
+  margin: auto;
+  margin-bottom: 10px;
+}
+
+.combatantInfo {
+  padding: 20px 10px;
+
+  height: 120px;
+
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+}
+.battleStats {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.itemContainer img {
+  max-width: 80px;
+  max-height: 80px;
+}
+
+.versus {
+  font-weight: 700;
+  font-size: 30px;
+  margin: auto;
+
+  position: relative;
+  top: 105px;
+  text-align: center;
+}
+.combatantNames {
+  margin: 0;
+  font-size: 14px;
+  text-align: center;
+}
+.pokeName {
+  text-align: center;
+  margin: 0 0 10px 0;
+  color: #ff2727;
+}
+.itemHeight {
+  height: 200px;
+}

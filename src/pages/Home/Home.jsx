@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Card from "../../components/Card/Card";
 import Header from "../../components/Header/Header";
-
+import { useHistorial } from "../../Context/HistorialContext";
 import CircularProgress from "@mui/material/CircularProgress";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -9,10 +9,11 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-
 import style from "./Home.module.css";
 
 const Home = () => {
+  const { dispatch } = useHistorial();
+
   const initialPokemonState = {
     name: "",
     img: null,
@@ -46,30 +47,32 @@ const Home = () => {
       const damage1 = Math.floor(Math.random() * 20) + pokemon1.attack;
       const damage2 = Math.floor(Math.random() * 20) + pokemon2.attack;
 
-      updatePokemon(
-        pokemon1,
-        pokemon1.name,
-        pokemon1.img,
-        pokemon1.life - damage2,
-        pokemon1.attack
-      );
-      updatePokemon(
-        pokemon2,
-        pokemon2.name,
-        pokemon2.img,
-        pokemon2.life - damage1,
-        pokemon2.attack
-      );
+      const updatedPokemon1 = {
+        ...pokemon1,
+        life: pokemon1.life - damage2,
+        damageReceived: damage2,
+        damageInflicted: damage1,
+      };
+
+      const updatedPokemon2 = {
+        ...pokemon2,
+        life: pokemon2.life - damage1,
+        damageReceived: damage1,
+        damageInflicted: damage2,
+      };
+
+      setPokemon1(updatedPokemon1);
+      setPokemon2(updatedPokemon2);
 
       let winnerName = "";
       let winnerImg = null;
 
-      if (pokemon1.life > pokemon2.life) {
-        winnerName = pokemon1.name;
-        winnerImg = pokemon1.img;
-      } else if (pokemon2.life > pokemon1.life) {
-        winnerName = pokemon2.name;
-        winnerImg = pokemon2.img;
+      if (updatedPokemon1.life > updatedPokemon2.life) {
+        winnerName = updatedPokemon1.name;
+        winnerImg = updatedPokemon1.img;
+      } else if (updatedPokemon2.life > updatedPokemon1.life) {
+        winnerName = updatedPokemon2.name;
+        winnerImg = updatedPokemon2.img;
       } else {
         winnerName = "Empate";
       }
@@ -95,6 +98,34 @@ const Home = () => {
       handleClickOpen();
     }
   }, [winnerName]);
+
+  const handleSaveToHistorial = () => {
+    const newItem = {
+      combatants: [
+        {
+          name: pokemon1.name,
+          image: pokemon1.img,
+          life: pokemon1.life,
+          attack: pokemon1.attack,
+          damageReceived: pokemon1.damageReceived,
+          damageInflicted: pokemon1.damageInflicted,
+        },
+        {
+          name: pokemon2.name,
+          image: pokemon2.img,
+          life: pokemon2.life,
+          attack: pokemon2.attack,
+          damageReceived: pokemon2.damageReceived,
+          damageInflicted: pokemon2.damageInflicted,
+        },
+      ],
+      winnerName,
+      winnerImage: winnerImg,
+    };
+
+    dispatch({ type: "AGREGAR_AL_HISTORIAL", payload: newItem });
+    handleClose();
+  };
 
   return (
     <div>
@@ -134,11 +165,9 @@ const Home = () => {
             id="alert-dialog-description"
             className={style.winnerInfo}
           >
-            {winnerName === "Empate" ? (
-              <p>Es un empate.</p>
-            ) : (
-              <p>El ganador es {winnerName}</p>
-            )}
+            {winnerName === "Empate"
+              ? `Es un empate.`
+              : `El ganador es ${winnerName}`}
             <img className={style.winnerImg} src={winnerImg} alt="" />
           </DialogContentText>
         </DialogContent>
@@ -146,7 +175,7 @@ const Home = () => {
           <Button onClick={handleClose} color="primary">
             Cerrar
           </Button>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={handleSaveToHistorial} color="primary">
             Guardar
           </Button>
         </DialogActions>

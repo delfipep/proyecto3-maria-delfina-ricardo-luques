@@ -7,7 +7,9 @@ const Header = () => {
 
   return (
     <div className={style.headerContainer}>
-      <h2>PokeArena</h2>
+      <Link to="/">
+        <h2>PokeArena</h2>
+      </Link>
 
       {location.pathname === "/" ? (
         <Link to="/historial">Historial</Link>

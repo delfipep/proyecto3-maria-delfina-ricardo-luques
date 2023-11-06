@@ -1,7 +1,10 @@
 .battleContainer {
   display: flex;
-  margin: auto;
-  width: 55vw;
+  align-items: center;
+  justify-content: center;
+}
+.battleContainer h3 {
+  text-align: center;
 }
 .centerContainer {
   margin: auto;
